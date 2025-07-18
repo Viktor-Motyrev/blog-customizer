@@ -15,23 +15,18 @@ import {
 import styles from './ArticleParamsForm.module.scss';
 
 interface ArticleParamsFormProps {
-	open: boolean;
-	onOpen: () => void;
-	onClose: () => void;
 	initialParams: ArticleStateType;
 	onApply: (params: ArticleStateType) => void;
 	onReset: () => void;
 }
 
 export const ArticleParamsForm = ({
-	open,
-	onOpen,
-	onClose,
 	initialParams,
 	onApply,
 	onReset,
 }: ArticleParamsFormProps) => {
 	const [formState, setFormState] = useState<ArticleStateType>(initialParams);
+	const [isOpen, setIsOpen] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -39,15 +34,15 @@ export const ArticleParamsForm = ({
 	}, [initialParams]);
 
 	useEffect(() => {
-		if (!open) return;
+		if (!isOpen) return;
 		function handleClick(e: MouseEvent) {
 			if (ref.current && !ref.current.contains(e.target as Node)) {
-				onClose();
+				setIsOpen(false);
 			}
 		}
 		document.addEventListener('mousedown', handleClick);
 		return () => document.removeEventListener('mousedown', handleClick);
-	}, [open, onClose]);
+	}, [isOpen]);
 
 	const handleFieldChange = (field: keyof ArticleStateType, value: any) => {
 		setFormState((prev) => ({ ...prev, [field]: value }));
@@ -66,9 +61,9 @@ export const ArticleParamsForm = ({
 
 	return (
 		<>
-			<ArrowButton isOpen={open} onClick={open ? onClose : onOpen} />
+			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} />
 			<aside
-				className={`${styles.container} ${open ? styles.container_open : ''}`}
+				className={`${styles.container} ${isOpen ? styles.container_open : ''}`}
 				ref={ref}
 			>
 				<form
@@ -83,9 +78,7 @@ export const ArticleParamsForm = ({
 								selected={formState.fontFamilyOption}
 								options={fontFamilyOptions}
 								title='Шрифт'
-								onChange={(option) =>
-									handleFieldChange('fontFamilyOption', option)
-								}
+								onChange={(option) => handleFieldChange('fontFamilyOption', option)}
 							/>
 						</div>
 						<div className={styles.field}>
@@ -113,9 +106,7 @@ export const ArticleParamsForm = ({
 								selected={formState.backgroundColor}
 								options={backgroundColors}
 								title='Цвет фона'
-								onChange={(option) =>
-									handleFieldChange('backgroundColor', option)
-								}
+								onChange={(option) => handleFieldChange('backgroundColor', option)}
 							/>
 						</div>
 						<div className={styles.field}>
