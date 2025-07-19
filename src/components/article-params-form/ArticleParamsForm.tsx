@@ -11,27 +11,26 @@ import {
 	contentWidthArr,
 	fontSizeOptions,
 	ArticleStateType,
+	defaultArticleState,
 } from 'src/constants/articleProps';
 import styles from './ArticleParamsForm.module.scss';
 
 interface ArticleParamsFormProps {
-	initialParams: ArticleStateType;
-	onApply: (params: ArticleStateType) => void;
-	onReset: () => void;
+	appliedParams: ArticleStateType;
+	setAppliedParams: (params: ArticleStateType) => void;
 }
 
 export const ArticleParamsForm = ({
-	initialParams,
-	onApply,
-	onReset,
+	appliedParams,
+	setAppliedParams,
 }: ArticleParamsFormProps) => {
-	const [formState, setFormState] = useState<ArticleStateType>(initialParams);
+	const [formState, setFormState] = useState<ArticleStateType>(appliedParams);
 	const [isOpen, setIsOpen] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		setFormState(initialParams);
-	}, [initialParams]);
+		setFormState(appliedParams);
+	}, [appliedParams]);
 
 	useEffect(() => {
 		if (!isOpen) return;
@@ -50,13 +49,13 @@ export const ArticleParamsForm = ({
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		onApply(formState);
+		setAppliedParams(formState);
 	};
 
 	const handleReset = (e: React.FormEvent) => {
 		e.preventDefault();
-		setFormState(initialParams);
-		onReset();
+		setFormState(defaultArticleState);
+		setAppliedParams(defaultArticleState);
 	};
 
 	return (

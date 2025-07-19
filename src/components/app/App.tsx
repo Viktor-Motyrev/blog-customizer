@@ -1,23 +1,12 @@
 import { useState, CSSProperties } from 'react';
 import { Article } from '../article/Article';
 import { ArticleParamsForm } from '../article-params-form/ArticleParamsForm';
-import {
-	defaultArticleState,
-	ArticleStateType,
-} from '../../constants/articleProps';
+import { defaultArticleState } from '../../constants/articleProps';
 import styles from '../../styles/index.module.scss';
 
 const App = () => {
 	// Применённые параметры
 	const [appliedParams, setAppliedParams] = useState(defaultArticleState);
-
-	const handleApply = (newParams: ArticleStateType) => {
-		setAppliedParams(newParams);
-	};
-
-	const handleReset = () => {
-		setAppliedParams(defaultArticleState);
-	};
 
 	return (
 		<main
@@ -32,9 +21,8 @@ const App = () => {
 				} as CSSProperties
 			}>
 			<ArticleParamsForm
-				initialParams={defaultArticleState}
-				onApply={handleApply}
-				onReset={handleReset}
+				appliedParams={appliedParams}
+				setAppliedParams={setAppliedParams}
 			/>
 			<Article />
 		</main>
